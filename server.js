@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
   res.json({ message: "API started" });
 });
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
@@ -80,3 +80,4 @@ function initial() {
 // routes
 require('./app/routes/auth.routes')(app);
 require('./app/routes/users.routes')(app);
+require('./app/routes/lobby.routes')(app);

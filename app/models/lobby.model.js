@@ -9,7 +9,8 @@ const Lobby = mongoose.model(
     links:Array,
     about:String,
     tags:Array,
-    players:Array
+    players:Array,
+    maxPlayers:Number
   })
 );
 
