@@ -4,8 +4,8 @@ const Lobby = db.lobby
 
 exports.lobbyCreate = (req, res) => {
     const lobby = new Lobby({
-        name:req.body.title,
-        game:req.body.text,
+        name:req.body.name,
+        game:req.body.game,
         mode:req.body.mode,
         links:req.body.links,
         tags:req.body.tags,
