@@ -15,7 +15,13 @@ exports.allAccess = (req, res) => {
       if (!user) {
         return res.status(404).send({ message: "User Not found." });
       }
-      res.status(200).send({username: user.username, id:user._id })
+      res.status(200).send({
+        username: user.username, 
+        id:user._id, 
+        aboutMe: user.aboutMe, 
+        links:user.links,
+        tags:user.tags,
+      })
     })
   };
   

@@ -17,14 +17,14 @@ exports.lobbyCreate = (req, res) => {
           res.status(500).send({ message: err });
           return;
         } else {
-          const filter = {_id: req.body.id}
-          const update = {inLobby: req.body.inLobby}
-          User.findOneAndUpdate(filter, update, {upsert:true}, (err, doc)=>{
-            if(err) return res.status(500).send(err);
-            User.findOne(filter).then((user) =>{
-              res.status(200).send(user.inLobby)
+          lobby.players.forEach((player)=>{
+            const filter = {_id: player.id}
+            const update = {inLobby: true}
+            User.findOneAndUpdate(filter, update, {upsert:true}, (err, doc)=>{
+              if(err) return res.status(500).send(err);
+            })
           })
-          })
+          res.status(200).send("user created");
         }
     })
   };

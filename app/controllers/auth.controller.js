@@ -114,7 +114,11 @@ exports.signin = (req, res) => {
         email: user.email,
         roles: authorities,
         accessToken: token,
-        inLobby: user.inLobby
+        inLobby: user.inLobby,
+        tags: user.tags,
+        links:user.links,
+        gameSettings: user.gameSettings,
+        gameFilters: user.gameFilters
       });
     });
 };
