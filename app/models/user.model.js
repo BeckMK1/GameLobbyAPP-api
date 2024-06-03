@@ -4,6 +4,7 @@ const User = mongoose.model(
   "User",
   new mongoose.Schema({
     username: String,
+    displayName:String,
     email: String,
     password: String,
     inLobby: Boolean,
@@ -13,16 +14,19 @@ const User = mongoose.model(
     gameSettings:[
       {
         game:String,
-        mode:String,
-        tags:Array
+        ign:String,
+        rank:String,
+        verrifaction: String,
+        tags:Array,
+        gameProfile:String
       }
     ],
     gameFilters:[
       {
         game:String,
         rank:String,
-        verifactionLink:String,
-        gameProfileLink:String
+        verifaction:String,
+        gameProfile:String
       }
     ],
     roles: [
