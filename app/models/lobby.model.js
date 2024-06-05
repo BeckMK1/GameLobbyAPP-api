@@ -5,6 +5,7 @@ const Lobby = mongoose.model(
   new mongoose.Schema({
     name: String,
     game:String,
+    status:String,
     mode:String,
     links:Array,
     about:String,

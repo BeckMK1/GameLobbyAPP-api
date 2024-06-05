@@ -66,8 +66,9 @@ exports.allAccess = (req, res) => {
     )
   }
   exports.updateGameSettings = (req, res) =>{
-    const id = {_id:req.params.id}
+    const id = req.params.id
     const update = {
+     game: req.body.game,
      ign: req.body.ign,
      rank: req.body.rank,
      verrifaction: req.body.verrifaction,
@@ -82,9 +83,9 @@ exports.allAccess = (req, res) => {
       tags: req.body.tags,
       gameProfile: req.body.gameProfile 
     }
-    const isSetting = false
+    let isSetting = false
     const game = req.body.game
-    User.findOne(id, 
+    User.findOne({_id:id}, 
       function(err, user){
         if(err){
           return res.status(500).send({ message: err });
@@ -95,22 +96,22 @@ exports.allAccess = (req, res) => {
         user.gameSettings.forEach(gameSetting => {
           isSetting = gameSetting.game.includes(game)
         });
-        if(isSetting){
-          User.findOneAndUpdate(game, update,{safe: true, upsert: true},
-            function(err, user){
-              if(err){
-                return res.status(500).send({ message: err });
-              }
-              if(!user){
-                return res.status(404).send({ message: "User Not found." });
-              }
-               return res.status(200).send("settings updated")
+        if(isSetting == true){
+           User.findOneAndUpdate({_id:id, "gameSettings.game": game}, {$set:{"gameSettings.$": update}},{safe: true, upsert: true},
+           function(err, user){
+            if(err){
+              console.log(err)
+              return res.status(500).send({ message: err });
             }
-          )
+            if(!user){
+              return res.status(404).send({ message: "User Not found." });
+            }
+             return res.status(200).send("setting updated")
+          }
+           )
         }
-
         else{
-          User.findOneAndUpdate(id, {$push:{gameSettings:create}},{safe: true, upsert: true},
+          User.findOneAndUpdate({_id:id}, {$push:{gameSettings:create}},{safe: true, upsert: true},
             function(err, user){
               if(err){
                 return res.status(500).send({ message: err });

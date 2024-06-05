@@ -6,6 +6,8 @@ exports.lobbyCreate = (req, res) => {
     const lobby = new Lobby({
         name:req.body.name,
         game:req.body.game,
+        status:"idle",
+        about:req.body.about,
         mode:req.body.mode,
         links:req.body.links,
         tags:req.body.tags,
@@ -55,13 +57,40 @@ exports.lobbyJoin = (req, res) => {
     })
   res.status(200).send({message: 'user added'})
 };
-
+exports.updateLobbyInfo = (req, res) =>{
+  const update = {
+    status: req.body.status,
+    mode: req.body.mode,
+    tags: req.body.tags,
+    links: req.body.links,
+    about: req.body.about,
+  }
+  Lobby.findByIdAndUpdate({_id:req.params.id}, update, 
+    function(err, lobby){
+      if(err){
+        return res.status(500).send(err)
+      }
+      if(!lobby){
+       return res.status(404).send("lobby not found")
+      }
+      return res.status(200).send(lobby)
+    }
+  )
+}
 exports.lobbyMy = (req, res) => {
-    Lobby.find({players:{$all: req.body.id}}).then((lobby) =>{
-      res.status(200).send(lobby)
-  })
+    Lobby.findOne({_id:req.params.id},
+      function(err, lobby){
+        if(err){
+          return res.status(500).send(err)
+        }
+        if(!lobby){
+          return res.status(404).send("lobby not found")
+        }
+        return res.status(200).send(lobby)
+      }
+    )
   };
-  exports.lobbyLeave = (req, res) => {
+exports.lobbyLeave = (req, res) => {
     const id = req.params.id
     Lobby.findByIdAndUpdate(id, {$pull:{players:req.body.id}},{safe: true, upsert: true},
       function(err, doc) {
@@ -79,4 +108,4 @@ exports.lobbyMy = (req, res) => {
             })
           }
       })
-  };
+};
