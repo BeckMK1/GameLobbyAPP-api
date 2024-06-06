@@ -21,12 +21,12 @@ exports.lobbyCreate = (req, res) => {
         } else {
           lobby.players.forEach((player)=>{
             const filter = {_id: player.id}
-            const update = {inLobby: true}
+            const update = {inLobby: lobby.id}
             User.findOneAndUpdate(filter, update, {upsert:true}, (err, doc)=>{
               if(err) return res.status(500).send(err);
             })
           })
-          res.status(200).send("user created");
+          res.status(200).send({message:'lobby created', id:lobby.id});
         }
     })
   };
@@ -36,7 +36,20 @@ exports.lobby = (req, res) => {
     res.send(lobby)
 })
 };
-
+exports.filteredLobbies = (req, res) =>{
+  const filter = {
+    game: req.body.game,
+    mode: req.body.mode,
+    tags:{$all: req.body.tags} 
+  }
+  try{
+    Lobby.find(filter).then((lobby)=>{
+      res.send(lobby)
+    })
+  }catch(err){
+    console.log("error: " + err)
+  }
+}
 exports.lobbyJoin = (req, res) => {
   const id = req.params.id
   const message = 'Lobby full'

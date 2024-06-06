@@ -15,4 +15,5 @@ module.exports = function(app) {
   app.get("/api/test/lobbyMy/:id", controller.lobbyMy)
   app.patch("/api/test/lobbyLeave/:id", [authJwt.verifyToken], controller.lobbyLeave)
   app.patch("/api/test/updateLobbyInfo/:id", [authJwt.verifyToken], controller.updateLobbyInfo)
+  app.post("/api/test/filteredLobbies", controller.filteredLobbies)
 };

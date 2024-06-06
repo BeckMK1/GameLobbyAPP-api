@@ -12,7 +12,7 @@ exports.signup = (req, res) => {
     displayName: req.body.username,
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
-    inLobby:false,
+    inLobby:"",
     aboutMe:"",
     links:[],
     tags:[],
