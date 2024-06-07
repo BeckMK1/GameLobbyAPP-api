@@ -53,22 +53,23 @@ exports.filteredLobbies = (req, res) =>{
 exports.lobbyJoin = (req, res) => {
   const id = req.params.id
   const message = 'Lobby full'
-  Lobby.findByIdAndUpdate(id, {$push:{players:req.body.id}},{safe: true, upsert: true},
-    function(err, doc) {
-        if(players.length >= maxPlayers ^ err){
-        console.log(`${err} or ${message}`);
-        }else{
-          const filter = {_id: req.body.id}
-          const update = {inLobby: req.body.inLobby}
-          User.findOneAndUpdate(filter, update, {upsert:true}, (err, doc)=>{
-            if(err) return res.status(500).send(err);
-            User.findOne(filter).then((user) =>{
-              res.status(200).send(user.inLobby)
-          })
-          })
-        }
+  Lobby.findById(id,function(err,lobby){
+    if(lobby.players.length >= lobby.maxPlayers){
+      return console.log(`${err} or ${message}`);
+    }else {
+    Lobby.findByIdAndUpdate(id, {$push:{players:req.body.player}},{safe: true, upsert: true},
+      function(err, lobby) {
+            const filter = {_id: req.body.id}
+            const update = {inLobby: req.params.id}
+            User.findOneAndUpdate(filter, update, {upsert:true}, (err, doc)=>{
+              if(err) return res.status(500).send(err);
+              User.findOne(filter).then((user) =>{
+                return res.status(200).send({id:user.inLobby, message: 'user added'})
+            })
+            })
     })
-  res.status(200).send({message: 'user added'})
+  }
+  })
 };
 exports.updateLobbyInfo = (req, res) =>{
   const update = {
@@ -105,14 +106,14 @@ exports.lobbyMy = (req, res) => {
   };
 exports.lobbyLeave = (req, res) => {
     const id = req.params.id
-    Lobby.findByIdAndUpdate(id, {$pull:{players:req.body.id}},{safe: true, upsert: true},
+    Lobby.findByIdAndUpdate(id, {$pull:{players:{id:req.body.id}}},{safe: true, upsert: true},
       function(err, doc) {
           if(err){
           console.log(err);
           }else{
             Lobby.find({players:{$exists:true, $size:0}}).deleteMany().exec();
             const filter = {_id: req.body.id}
-            const update = {inLobby: req.body.inLobby}
+            const update = {inLobby: ""}
             User.findOneAndUpdate(filter, update, {upsert:true}, (err, doc)=>{
               if(err) return res.status(500).send(err);
               User.findOne(filter).then((user) =>{
