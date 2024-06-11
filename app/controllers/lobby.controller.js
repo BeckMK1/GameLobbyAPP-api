@@ -7,6 +7,7 @@ exports.lobbyCreate = (req, res) => {
         name:req.body.name,
         game:req.body.game,
         status:"idle",
+        rank:req.body.rank,
         about:req.body.about,
         mode:req.body.mode,
         links:req.body.links,
@@ -37,18 +38,33 @@ exports.lobby = (req, res) => {
 })
 };
 exports.filteredLobbies = (req, res) =>{
-  const filter = {
+  const simplefilter = {
     game: req.body.game,
     mode: req.body.mode,
-    tags:{$all: req.body.tags} 
+  }
+  const complexFilter = {
+    game: req.body.game,
+    mode: req.body.mode,
+    tags: {$all:req.body.tags}
+  }
+  if(req.body.tags.length == 0){
+    try{
+      Lobby.find(simplefilter).then((lobby)=>{
+        res.send(lobby)
+      })
+    }catch(err){
+      console.log("error: " + err)
+    }
+    return
   }
   try{
-    Lobby.find(filter).then((lobby)=>{
+    Lobby.find(complexFilter).then((lobby)=>{
       res.send(lobby)
     })
   }catch(err){
     console.log("error: " + err)
   }
+
 }
 exports.lobbyJoin = (req, res) => {
   const id = req.params.id
