@@ -110,18 +110,20 @@ exports.signin = (req, res) => {
         authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
       }
       res.status(200).send({
+        accessToken: token,
+        userData:{
         id: user._id,
         username: user.username,
         displayName: user.displayName,
         email: user.email,
         roles: authorities,
-        accessToken: token,
         inLobby: user.inLobby,
         aboutMe: user.aboutMe,
         tags: user.tags,
         links:user.links,
         gameSettings: user.gameSettings,
         gameFilters: user.gameFilters
+        }
       });
     });
 };

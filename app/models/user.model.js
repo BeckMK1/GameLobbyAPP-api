@@ -16,17 +16,16 @@ const User = mongoose.model(
         game:String,
         ign:String,
         rank:String,
-        verrifaction: String,
         tags:Array,
         gameProfile:String
       }
     ],
     gameFilters:[
       {
+        title:String,
         game:String,
-        rank:String,
-        verifaction:String,
-        gameProfile:String
+        mode:String,
+        tags:Array,
       }
     ],
     roles: [
